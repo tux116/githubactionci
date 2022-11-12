@@ -2,18 +2,27 @@ name: ClashX.Sing-Box Build
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    tags: [ v* ]
+  workflow_dispatch:
+    inputs:
+      logLevel:
 
 jobs:
   build:
     name: Build and analyse default scheme using xcodebuild command
-    runs-on: macos-latest
+    runs-on: macos-10.15
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        run: |
+          git clone https://github.com/mrFq1/ClashX.Sing-Box
+          cd ClashX.Sing-Box
+      - name: setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19.x
+  
+          
       - name: Set Default Scheme
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
